@@ -9,9 +9,7 @@ export class GifSaveState extends ComposerExtension {
     let elem = document.getElementsByClassName('contenteditable')[0];
 
     if (document.getElementById('n1-gif-marker') !== null) {
-      var markerOld = document.getElementById('n1-gif-marker');
-      markerOld.outerHTML = '';
-      delete markerOld;
+      document.getElementById('n1-gif-marker').remove();
     }
 
     let r = document.createRange();
@@ -26,9 +24,7 @@ export class GifSaveState extends ComposerExtension {
     let elem = document.getElementsByClassName('contenteditable')[0];
 
     if (document.getElementById('n1-gif-marker') !== null) {
-      var markerOld = document.getElementById('n1-gif-marker');
-      markerOld.outerHTML = '';
-      delete markerOld;
+      document.getElementById('n1-gif-marker').remove();
     }
   }
 }
@@ -45,7 +41,7 @@ export class GifPicker extends React.Component {
   constructor(props) {
     super(props);
 
-    this.closePopover = this.closePopover.bind(this);3
+    this.closePopover = this.closePopover.bind(this);
     this.render = this.render.bind(this);
   }
 
@@ -84,7 +80,7 @@ class Gif extends React.Component {
     let gifElem = `<span><img src="${ gifUrl }"></span>`;
     let elem = document.getElementsByClassName('contenteditable')[0];
 
-    let sel = window.getSelection();
+    let sel = document.getSelection();
     let marker = document.getElementById('n1-gif-marker');
     sel.setBaseAndExtent(marker, 0, marker, 0);
     document.execCommand('insertHTML', true, gifElem);
@@ -111,10 +107,11 @@ class GifList extends React.Component {
   }
 
   render() {
-    let gifNodes = this.props.data.map((gif) => {
-      return (
-        <Gif gifUrl={gif.images.fixed_height_small.url} key={gif.id} />
-      );
+    let gifNodes = this.props.data.map(gif => {
+      let gifUrl = gif.images.fixed_height_small.url;
+      let bigGifUrl = gif.images.original.url;
+
+      return <Gif gifUrl={gifUrl} bigGifUrl={bigGifUrl} key={gif.id} />;
     });
     return (
       <div className="gif-content-container">
@@ -126,6 +123,8 @@ class GifList extends React.Component {
 
 // Container
 class GifBox extends React.Component {
+  static displayName = 'GifBox';
+
   constructor(props) {
     super(props);
 
